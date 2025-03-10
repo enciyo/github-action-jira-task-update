@@ -13,14 +13,21 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y%m%d%H%M%S')"
+      - name: Create tag
+        run: git tag v${{ steps.date.outputs.date }}
+      - name: Push tag
+        run: git push origin v${{ steps.date.outputs.date }}
       - name: Create Release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          tag_name: v${{ steps.date.outputs.date }}
+          release_name: Release v${{ steps.date.outputs.date }}
           body: |
-            Auto release created
+            Otomatik release oluşturuldu.
           draft: false
           prerelease: false
