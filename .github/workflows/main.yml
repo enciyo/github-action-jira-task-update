@@ -1,0 +1,20 @@
+name: Jira Integration Workflow
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  jira-integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Jira Search Action
+        uses: ./.github/actions
+        with:
+          jira_server: ${{ secrets.JIRA_SERVER }}
+          jira_api_token: ${{ secrets.JIRA_API_TOKEN }}
+          jql_query: 'project = MYPROJECT AND status = "In Progress"'
+          release_branch: 'release/.*'

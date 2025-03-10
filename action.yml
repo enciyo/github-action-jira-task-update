@@ -1,0 +1,35 @@
+name: "Jira Search Action"
+description: "GitHub Action to search Jira using JQL query"
+inputs:
+  jira_server:
+    description: "Jira server URL"
+    required: true
+  jira_api_token:
+    description: "Jira API token"
+    required: true
+  jql_query:
+    description: "JQL query to search"
+    required: true
+  release_branch:
+    description: "Default release branch regex"
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.10"
+    - name: Install dependencies
+      shell: bash
+      run: |
+        pip install -r requirements.txt || true
+    - name: Run main.py
+      shell: bash
+      run: python main.py
+      env:
+        JIRA_SERVER: ${{ inputs.jira_server }}
+        JIRA_API_TOKEN: ${{ inputs.jira_api_token }}
+        JQL_QUERY: ${{ inputs.jql_query }}
+        RELEASE_BRANCH: ${{ inputs.release_branch }}
